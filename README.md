@@ -1,6 +1,7 @@
 # IKB42603-CLOUD-COMPUTING-SECURITY-ESSENTIALS
 
 Quiz
+- 
 
 Which service model provides virtual machines?
 
