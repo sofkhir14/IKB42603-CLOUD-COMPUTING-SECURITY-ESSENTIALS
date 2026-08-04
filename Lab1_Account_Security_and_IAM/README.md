@@ -25,11 +25,16 @@ Environment
 Session A: Cloud Identity with LocalStack (AWS IAM)
 - 
 
-- ![alt text](<Screenshot 2026-07-29 004157.png>)
+- <img width="612" height="222" alt="Screenshot 2026-07-29 004157" src="https://github.com/user-attachments/assets/11342120-ec2f-408d-8ce1-447a12d32276" />
+
 Purpose: Runs the LocalStack container in the background (-d), names it localstack, and maps local port 4566 to container port 4566 so the AWS CLI can talk to local emulated AWS APIs
-- ![alt text](<Screenshot 2026-07-29 010254-1.png>)
+
+- <img width="627" height="236" alt="Screenshot 2026-07-29 010254" src="https://github.com/user-attachments/assets/b2a2220b-396d-459e-8eed-c56920fd46de" />
+
 Purpose: Sends an HTTP request to LocalStack's health check endpoint to verify that all emulated cloud services are running properly.
-- ![alt text](<Screenshot 2026-07-29 194639.png>)
+
+- <img width="565" height="125" alt="Screenshot 2026-07-29 194639" src="https://github.com/user-attachments/assets/73abb81b-fa56-4fbf-b839-63198bafff36" />
+
 Purpose: Overrides the default AWS endpoint to direct the request to LocalStack, querying the Security Token Service (STS) to display the active AWS identity.
 
 Step-by-Step Implementations
@@ -37,90 +42,115 @@ Step-by-Step Implementations
 Task 1: Cloud Identity Landscape Table
 - 
 
-![alt text](image-1.png)
+<img width="766" height="515" alt="Screenshot 2026-08-02 234643" src="https://github.com/user-attachments/assets/604aa488-f358-443b-9d84-cff8796df83e" />
+
 
 Task 2: Least-Privilege Admin Setup
 - 
 
-- ![alt text](<Screenshot 2026-07-29 194946.png>)
+- <img width="462" height="181" alt="Screenshot 2026-07-29 194946" src="https://github.com/user-attachments/assets/465ab467-c84e-4890-8d93-b1dfb4c255fe" />
+
 Purpose: Creates an IAM Group names Admins to aggregate administrative permissions.
 
-- ![alt text](<Screenshot 2026-07-29 200204.png>)
+- <img width="737" height="67" alt="Screenshot 2026-07-29 200204" src="https://github.com/user-attachments/assets/0e4411db-83af-461c-a240-3dd9d6bf1fab" />
+
 Purpose: Attaches the AWS managed policy AdministratorAccess to the Admins group which granting administrative rights to all members in that group.
 
-- ![alt text](<Screenshot 2026-07-29 200117.png>)
+- <img width="536" height="182" alt="Screenshot 2026-07-29 200117" src="https://github.com/user-attachments/assets/87f75e60-651b-496d-bcd0-8eb444229960" />
+
 Purpose: Creates a dedicated user account for administrative tasks so it dont use the root account directly.
 
-- ![alt text](<Screenshot 2026-07-29 200221.png>)
-Purpose: Adds my admin user to the Admins group so it automatically inherits adminstrative rights through group inheritance. 
+- <img width="667" height="42" alt="Screenshot 2026-07-29 200221" src="https://github.com/user-attachments/assets/1fe1fd5b-c014-4761-9579-8059505a701c" />
 
-- ![alt text](<Screenshot 2026-07-29 200308.png>)
-Purpose: Audits the group membership to confirm that CloudAdmin_SOFEA was added successfully.
+Purpose: Adds my admin user to the Admins group so it automatically inherits administrative rights through group inheritance. 
+
+- <img width="571" height="337" alt="Screenshot 2026-07-29 200308" src="https://github.com/user-attachments/assets/d82dfd08-405c-4b8a-9a5e-17fe2e5ad1d4" />
+
+Purpose: Audits the group membership to confirm that CloudAdmin_Sofea was added successfully.
 
 Task 3: Scoped Read-Only Analyst
 - 
 
-- ![alt text](<Screenshot 2026-07-29 200813.png>)
+- <img width="527" height="186" alt="Screenshot 2026-07-29 200813" src="https://github.com/user-attachments/assets/7758b505-f4c5-4baa-b9fc-a85783eeec97" />
+
 Purpose: Creates a personal user account for a team member who only needs limited access.
 
-- ![alt text](<Screenshot 2026-07-29 201006.png>)
+- <img width="742" height="60" alt="Screenshot 2026-07-29 201006" src="https://github.com/user-attachments/assets/9f2c1c71-3e97-4e1d-9990-8097b55d0508" />
+
 Purpose: Directly attaches a scoped policy allowing read-only access to Amazon S3. This prevent any write or delete privileges.
 
-- ![alt text](<Screenshot 2026-07-29 201049.png>)
+- <img width="602" height="172" alt="Screenshot 2026-07-29 201049" src="https://github.com/user-attachments/assets/fa6ec8ae-61b8-4082-9a2b-54612086e7d6" />
+
 Purpose: Audits the Analyst user account to verify which policies are attached. 
 
 Task 4: Credential Hygiene & Access Keys
 - 
 
-- ![alt text](<Screenshot 2026-07-29 201224.png>)
+- <img width="583" height="187" alt="Screenshot 2026-07-29 201224" src="https://github.com/user-attachments/assets/ab04f817-f39e-46fa-aad2-bbedaef6480c" />
+
 Purpose: Generates a programmatic Access Key ID and Secret Access Key for CLI/API interactions. 
 
-- ![alt text](<Screenshot 2026-07-29 201310.png>) 
+- <img width="498" height="200" alt="Screenshot 2026-07-29 201310" src="https://github.com/user-attachments/assets/c192f43f-7f3d-43a1-b56b-542867b6d7e6" />
+
 Purpose: Lists all active and inactive access keys with the Analyst account.
 
-- ![alt text](<Screenshot 2026-07-29 201735.png>)
+- <img width="742" height="65" alt="Screenshot 2026-07-29 201735" src="https://github.com/user-attachments/assets/5a4501c1-93c7-4fe0-b2e2-33efd7c1497d" />
+
 Purpose: Deactivates an existing access key during credential rotation to revoke access without deleting the key history.
 
 Session B: Kubernetes RBAC
 - 
 
 1. Cluster & Namespace Setup
-- ![alt text](<Screenshot 2026-08-02 195009.png>)
+- <img width="392" height="255" alt="Screenshot 2026-08-02 195009" src="https://github.com/user-attachments/assets/9d1a45c0-9cf8-4529-880e-b3decdc9025c" />
+
 Purpose: Provisions a local Kubernetes cluster inside Docker containers named ccse-lab1 using kind.
 
 
-- ![alt text](<Screenshot 2026-08-02 195715.png>)
- ![alt text](<Screenshot 2026-08-02 195750.png>)
+- <img width="627" height="140" alt="Screenshot 2026-08-02 195715" src="https://github.com/user-attachments/assets/65e9881d-7bf9-49d3-93b4-1f978e33ff80" />
+
+ <img width="541" height="68" alt="Screenshot 2026-08-02 195750" src="https://github.com/user-attachments/assets/7279dfae-f14b-4611-8190-ef0f7b8d5254" />
+
 Purpose: Confirms that kubectl is communicating with the newly created cluster control plane and verifies node health.
 
-- ![alt text](<Screenshot 2026-08-02 195828.png>)
- ![alt text](<Screenshot 2026-08-02 195850.png>) 
+- <img width="262" height="55" alt="Screenshot 2026-08-02 195828" src="https://github.com/user-attachments/assets/8bc3ca07-ece8-49b3-9044-b7804a510b9a" />
+
+ <img width="273" height="58" alt="Screenshot 2026-08-02 195850" src="https://github.com/user-attachments/assets/43a79533-a335-4498-b73c-61f82f6676ea" />
+
 Purpose: Creates two isolated logical environment (dev and prod) inside the same physical cluster. 
 
-- ![alt text](<Screenshot 2026-08-02 195915.png>) 
+- <img width="280" height="177" alt="Screenshot 2026-08-02 195915" src="https://github.com/user-attachments/assets/9b093ada-b8ac-4c65-83af-f22db4c93385" />
+
 Purpose: List all logical namespaces currently created inside the Kubernetes cluster.
 
 2. Task 6: RBAC Configuration
-- ![alt text](<Screenshot 2026-08-02 200044.png>)
+- <img width="402" height="58" alt="Screenshot 2026-08-02 200044" src="https://github.com/user-attachments/assets/745328ca-a4b8-4fbb-a5d1-ce7ac88e7e2a" />
+
 Purpose: Creates a programmatic identity (Service Account) named dev-user specifically inside the dev namespace.
 
-- ![alt text](<Screenshot 2026-08-02 200239.png>)
+- <img width="621" height="96" alt="Screenshot 2026-08-02 200239" src="https://github.com/user-attachments/assets/43a417b0-3206-40ee-9f34-dd59c7632cbc" />
+
 Purpose: Creates a namespace-scoped Role object named pod-reader in dev that defines what actions are allowed (get,list,watch on pods).
 
-- ![alt text](<Screenshot 2026-08-02 200414.png>)
+- <img width="623" height="82" alt="Screenshot 2026-08-02 200414" src="https://github.com/user-attachments/assets/17fac402-8572-4e72-802d-0d40140f551f" />
+
 Purpose: Binds the dev-user Service Account to the pod-reader Role within the dev namespace, granting it those specific permissions.
 
 3. Task 7 & Verification: Testing Authorization Boundaries
-- ![alt text](<Screenshot 2026-08-04 212659.png>)
+- <img width="410" height="61" alt="Screenshot 2026-08-04 212659" src="https://github.com/user-attachments/assets/b8945601-bcbe-4680-8501-407a91b0fa37" />
+
 Purpose: Simulates an API request as the Service Account to test if listing pods in dev is permitted.
 
-- ![alt text](image-2.png)
+- <img width="408" height="65" alt="Screenshot 2026-08-04 212833" src="https://github.com/user-attachments/assets/ea0abb1f-655f-486d-a753-63db1919b88e" />
+
 Purpose: Tests if the Service Account can delete pods in dev, verifying that unauthorized verbs are blocked.
 
-- ![alt text](image-3.png)
+- <img width="408" height="56" alt="Screenshot 2026-08-04 212944" src="https://github.com/user-attachments/assets/8dab1727-bba7-49bd-9fe0-1d2b302b5777" />
+
 Purpose: Tests if the permissions leak into the prod namespace. Proving namespace isolation. 
 
-- ![alt text](<Screenshot 2026-08-02 202347.png>)
+- <img width="477" height="296" alt="Screenshot 2026-08-02 202347" src="https://github.com/user-attachments/assets/c6005779-7f06-4b0d-afa0-b999f592688d" />
+
 Purpose: Exports the full YAML configuration of the RoleBinding to prove and document that RBAC was correctly constructed.
 
 Challenges Encountered
