@@ -306,6 +306,14 @@ Q5: How does a hash chain make a log tamper-evident?
 
 [/] Integrity verified with hashing and a hash chain. 
 
+# Cleanup
+The environment can be removed after completing the lab and saved all the evidence needed. 
+
+<img width="630" height="111" alt="Screenshot 2026-08-21 172258" src="https://github.com/user-attachments/assets/08bd8eed-46c0-418e-b535-8e8fcff6266e" />
+
+<img width="216" height="56" alt="Screenshot 2026-08-21 172349" src="https://github.com/user-attachments/assets/df567f44-0740-4923-abd7-9411e11a8467" />
+
+
 # Verification Commands
 ```
 aws --endpoint-url=http://localhost:4566 kms list-keys
@@ -322,6 +330,9 @@ Evidence:
 <img width="624" height="266" alt="Screenshot 2026-08-19 192701" src="https://github.com/user-attachments/assets/4fc7fed2-ab70-4255-a939-98a088ddfe2d" />
 
 <img width="618" height="79" alt="Screenshot 2026-08-19 192802" src="https://github.com/user-attachments/assets/624fb6a6-17eb-4464-8b40-dfb0df394aea" />
+
+# Conclusion
+This lab showed how to protect data in the cloud using encryption, key management, and hashing. Symmetric encryption (AES) is great for securing large files, while asymmetric encryption (RSA) and TLS protect data during transit. Envelope encryption with AWS KMS makes key handling faster and more secure. Finally, deleting master keys allows per-tenant data to be permanently erased, and hash chains make it easy to spot if log files have been altered.
 
 # References
 1. Course Lecture - Week 4 (Data Protection); Week 9 (Key Management Patterns).
