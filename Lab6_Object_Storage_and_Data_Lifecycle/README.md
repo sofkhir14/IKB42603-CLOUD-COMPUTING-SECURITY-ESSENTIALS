@@ -36,6 +36,32 @@ By completing this lab, I will be able to:
 
 - Command Line Utilities: curl, awk, sed, jq
 
+# One-Time Environment Setup
+```
+# 1. Stop any old instance and start clean community LocalStack with IAM enforcement
+docker rm -f localstack 2>/dev/null
+
+docker run -d --name localstack -p 4566:4566 \
+  -e ENFORCE_IAM=1 \
+  localstack/localstack:2.3.2
+
+# 2. Wait 10 seconds for initialization
+sleep 10
+
+# 3. Configure CLI environment variables and dummy AWS credentials
+export EP='--endpoint-url=http://localhost:4566'
+aws configure set aws_access_key_id test
+aws configure set aws_secret_access_key test
+aws configure set region us-east-1
+
+# 4. Verify local identity (should return Account: 000000000000)
+aws $EP sts get-caller-identity
+```
+Evidence:
+
+<img width="363" height="133" alt="Screenshot 2026-09-11 145316" src="https://github.com/user-attachments/assets/ce7104ef-4ed6-4989-9bcf-b0786551d011" />
+
+
 # Data Classification Table
 
 | Classification | Who May Read It | Impact if Leaked | Control Applied |
@@ -79,6 +105,8 @@ The terminal displayed the three uploaded objects with their key prefixes and co
 
 Evidence:
 
+<img width="632" height="247" alt="Screenshot 2026-09-11 151000" src="https://github.com/user-attachments/assets/6114d4ac-8a3a-477b-ad62-e4f637555df1" />
+
 
 # Task 2: Reproduce the Archetypal Breach
 A overly permissive resource policy granting ```Principal: "*"``` access to ```s3:GetObject``` was applied to simulate an unauthenticated public breach.
@@ -109,6 +137,8 @@ Result:
 The ```curl``` command returned ```HTTP 200``` and printed the confidential patient record without supplying any AWS credentials. This illustrates an unauthenticated bucket breach.
 
 Evidence:
+
+<img width="622" height="110" alt="Screenshot 2026-09-11 151125" src="https://github.com/user-attachments/assets/5b29cd4b-1f24-42e9-b14d-ce6bab706e63" />
 
 
 # Task 3: Remediate with Block Public Access
@@ -148,6 +178,7 @@ Result:
 
 Evidence:
 
+<img width="628" height="467" alt="Screenshot 2026-09-11 151416" src="https://github.com/user-attachments/assets/fb2ca252-d26b-447c-97d4-bf42e888f053" />
 
 # Task 4: Identity Policy vs Resource Policy
 An IAM user (```DataAnalyst```) with full read permissions was created. A bucket policy containing an explicit ```Deny``` on ```confidential/*``` was applied to verify policy evaluation logic.
@@ -218,6 +249,8 @@ Reading ```internal/roster.txt``` succeeded (```Allowed```), whereas reading ```
 
 Evidence:
 
+<img width="625" height="432" alt="Screenshot 2026-09-11 151828" src="https://github.com/user-attachments/assets/b02b922e-b9b8-44a3-8c6b-8b601de74e5d" />
+
 
 # Task 5: Default Encryption at Rest (SSE-KMS)
 A Customer Managed Key (CMK) was generated in KMS, and default SSE-KMS bucket encryption was enforced.
@@ -256,6 +289,8 @@ Result:
 ```head-object``` returned ```aws:kms```, the CMK Key ID, and ```True``` for ```BucketKeyEnabled```, demonstrating default bucket-level envelope encryption.
 
 Evidence:
+
+<img width="633" height="118" alt="Screenshot 2026-09-11 152428" src="https://github.com/user-attachments/assets/8f155f58-15d9-4faf-914a-7d826d205dd6" />
 
 
 # Task 6: Delegated Access and the Condition-Key Trap
@@ -296,6 +331,7 @@ The presigned URL allowed object download. Applying the ```aws:SecureTransport``
 
 Evidence:
 
+<img width="630" height="501" alt="Screenshot 2026-09-11 152613" src="https://github.com/user-attachments/assets/111c803c-c8b8-4e71-88ff-c2127e3acff2" />
 
 # Task 7: Versioning, Delete Markers & Data Remanence
 Bucket versioning was enabled, multiple object versions were created, and object-level data remanence was evaluated after executing a standard delete command.
@@ -330,6 +366,10 @@ Result:
 Issuing ```delete-object``` created a Delete Market without removing historical data. The original confidential file was successfully retrieved using ```--version-id null```. This demonstrates data remanence.
 
 Evidence:
+
+<img width="632" height="372" alt="Screenshot 2026-09-11 153325" src="https://github.com/user-attachments/assets/662481b8-adfd-409d-9835-21893fbbe8d4" />
+
+<img width="357" height="65" alt="Screenshot 2026-09-11 153532" src="https://github.com/user-attachments/assets/c4fcc3a7-0a52-48ec-8727-74bbe29b088b" />
 
 
 # Task 8: Lifecycle, Retention & Cryptographic Erasure
@@ -372,6 +412,10 @@ Result:
 The lifecycle rules were applied successfully, and the KMS key state transitioned to ```PendingDeletion```, rendering encrypted ciphertexts unrecoverable.
 
 Evidence:
+
+<img width="583" height="157" alt="Screenshot 2026-09-11 153936" src="https://github.com/user-attachments/assets/202a872e-a4ba-43be-aa58-7d785d8d4c00" />
+
+<img width="527" height="75" alt="Screenshot 2026-09-11 153956" src="https://github.com/user-attachments/assets/bd23d8c7-f5c8-40f9-86e0-1ca20f0f1431" />
 
 
 # Command Used
@@ -429,6 +473,9 @@ Q6: You are the auditor in Week 11. Name three commands from this lab whose outp
 
 # Challenges Encountered
 
+- LocalStack Policy Evaluation Behavior: Default LocalStack configurations permit requests regardless of IAM policies. Running LocalStack with ```ENFORCE_IAM=1``` ensured accurate authorization checks for Task 4.
+
+- Local HTTP Transport Blocking: Applying an ```aws"SecureTransport``` condition key blocked local CLI requests over plain HTTP (```http://localhost:4566```). Deleting the bucket policy restored communication. 
 
 # Lessons Learned
 - Public storage breaches stem from misconfigured resource policies containing ```"Principal: "*"``` rather than complex software exploits.
@@ -464,6 +511,10 @@ aws $EP s3api get-bucket-lifecycle-configuration --bucket $BUCKET \
   --query 'Rules[].[ID,Status]' --output text
 aws $EP kms describe-key --key-id $KEY_ID --query 'KeyMetadata.KeyState' --output text
 ```
+Evidence:
+
+<img width="632" height="153" alt="Screenshot 2026-09-11 155545" src="https://github.com/user-attachments/assets/cb2af85a-e213-498f-9ef7-40fe7e23de8d" />
+
 
 # Cleanup 
 ```
